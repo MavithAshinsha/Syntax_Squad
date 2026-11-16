@@ -11,7 +11,6 @@ public class EclassMain {
         int choice;
         
         
-       
         do{
             System.out.println("\n==============================");
             System.out.println("       E-CLASS SYSTEM");

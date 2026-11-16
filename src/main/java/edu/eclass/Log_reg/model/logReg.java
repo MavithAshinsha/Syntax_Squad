@@ -11,11 +11,15 @@ public class logReg {
 
     private final Scanner scanner;
 
-    String stid;
+    private String stid;
     String pw;
-    String name;
+    private String initialsName;
+    private String fullName;
+    private String birthDate;
     private String email;
     private String pTel;
+    private String parentName;
+    private String parentTel;
     private int nextStudentNumber = getLastId();
 
     //setter
@@ -31,7 +35,7 @@ public class logReg {
         this();
         this.stid = stid;
         this.pw = pw;
-        this.name = name;
+        this.initialsName = name;
         this.email = email;
         this.pTel = pTel;
 
@@ -46,33 +50,102 @@ public class logReg {
         return stid;
     }
 
+    public void setStid(String stid) {
+        this.stid = stid;
+    }
+
     public String getName() {
-        return name;
+        return initialsName;
+    }
+
+    public void setName(String name) {
+        this.initialsName = name;
+    }
+
+    public String getInitialsName() {
+        return initialsName;
+    }
+
+    public void setInitialsName(String initialsName) {
+        this.initialsName = initialsName;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(String birthDate) {
+        this.birthDate = birthDate;
     }
 
     public String getEmail() {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getPtel() {
         return pTel;
     }
+
+    public void setPtel(String pTel) {
+        this.pTel = pTel;
+    }
+
+    public String getParentName() {
+        return parentName;
+    }
+
+    public void setParentName(String parentName) {
+        this.parentName = parentName;
+    }
+
+    public String getParentTel() {
+        return parentTel;
+    }
+
+    public void setParentTel(String parentTel) {
+        this.parentTel = parentTel;
+    }
     
     public void reg() {
-        System.out.print("\n\nEnter Your Name: ");
-        String n = scanner.nextLine();
+        System.out.print("\n\nEnter Your Name with Initials: ");
+        setInitialsName(scanner.nextLine());
+        System.out.print("Enter Your Full Name: ");
+        setFullName(scanner.nextLine());
+        System.out.print("Enter Your Birth Date (YYYY-MM-DD): ");
+        setBirthDate(scanner.nextLine());
         System.out.print("Enter the Password: ");
         String pw = scanner.nextLine();
         System.out.print("Enter Your Email: ");
-        String email = scanner.nextLine();
+        setEmail(scanner.nextLine());
         System.out.print("Enter Your Number: ");
-        String pn = scanner.nextLine();
+        setPtel(scanner.nextLine());
+
+        System.out.print("Enter Your Parent Name: ");
+        setParentName(scanner.nextLine());
+        System.out.print("Enter Your Parent Number: ");
+        setParentTel(scanner.nextLine());
+
+
+
         System.out.print("\n");
         
-        String sid = String.format("ST%03d", nextStudentNumber++);
-        saveData(sid, n, pw, email, pn);
+        setStid(String.format("ST%03d", nextStudentNumber++));
+        saveData(getStid(), getInitialsName(), pw, getEmail(), getPtel(), getFullName(), getBirthDate(),
+                getParentName(), getParentTel());
         System.out.println("\nRegistration Succesful!");
-        System.out.println("Your Student ID: "+sid);
+        System.out.println("Your Student ID: "+getStid());
     }
     
     public int login() {
@@ -92,6 +165,16 @@ public class logReg {
     public void saveData(String sid, String na, String pw, String email, String ptel) {
         try (FileWriter writer = new FileWriter("student.txt", true)) {
             writer.write(sid + "," + na + "," + pw + "," + email + "," + ptel + "\n");
+        } catch (IOException e) {
+            System.out.println("invalid: " + e.getMessage());
+        }
+    }
+
+    public void saveData(String sid, String initialsName, String pw, String email, String ptel,
+                         String fullName, String birthDate, String parentName, String parentTel) {
+        try (FileWriter writer = new FileWriter("student.txt", true)) {
+            writer.write(sid + "," + initialsName + "," + pw + "," + email + "," + ptel + ","
+                    + fullName + "," + birthDate + "," + parentName + "," + parentTel + "\n");
         } catch (IOException e) {
             System.out.println("invalid: " + e.getMessage());
         }
