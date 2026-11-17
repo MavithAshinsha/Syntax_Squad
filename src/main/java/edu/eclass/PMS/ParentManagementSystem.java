@@ -1,5 +1,3 @@
-package edu.eclass.PMS;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -7,35 +5,41 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-/** Finds the student's parent phone and appends a demo attendance notice to a text file. */
+/** Saves a demo attendance notification addressed to the student's parent or guardian. */
 public class ParentManagementSystem {
+    private static final String STUDENT_FILE = "student.txt";
+    private static final String NOTIFICATION_FILE = "parent_notifications.txt";
+    private static final DateTimeFormatter TIMESTAMP_FORMAT =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-
-    private final String studentFile = "student.txt";
-    private final String notificationFile = "parent_notifications.txt";
-
-    
-    public boolean notifyAttendance(int studentId, String className) {
+    public boolean notifyAttendance(String studentId, String className) {
         String[] student = findStudent(studentId);
-
         if (student == null) {
-            System.out.println("Student ID " + studentId + " was not found in student.txt.");
+            System.out.println("Student ID " + studentId + " was not found in " + STUDENT_FILE + ".");
             return false;
         }
 
-        String studentName = student[1];
-        String parentPhone = student[5];
-        String dateTime = LocalDateTime.now().format(
-                DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String parentPhone;
+        if (student.length >= 9) {
+            parentPhone = student[8].trim();
+        } else if (student.length >= 6) {
+            parentPhone = student[5].trim();
+        } else {
+            parentPhone = student[4].trim();
+        }
+        if (parentPhone.isEmpty()) {
+            System.out.println("No parent/guardian phone number is saved for " + studentId + ".");
+            return false;
+        }
+        String dateTime = LocalDateTime.now().format(TIMESTAMP_FORMAT);
+        String message = "To Parent Phone: " + parentPhone + System.lineSeparator()
+                + "Attendance update: " + student[1].trim() + " (Student ID: " + studentId + ")"
+                + " attended " + className + " on " + dateTime + "."
+                + System.lineSeparator() + System.lineSeparator();
 
-        String message = "To Parent Phone: " + parentPhone + "\n"
-                + "Attendance update: " + studentName + " (Student ID: " + studentId + ")"
-                + " attended " + className + " on " + dateTime + ".\n\n";
-
-        
-        try (FileWriter writer = new FileWriter(notificationFile, true)) {
+        try (FileWriter writer = new FileWriter(NOTIFICATION_FILE, true)) {
             writer.write(message);
-            System.out.println("The notification has been successfully send  " + notificationFile);
+            System.out.println("Parent notification saved to " + NOTIFICATION_FILE + ".");
             return true;
         } catch (IOException e) {
             System.out.println("Could not save parent notification: " + e.getMessage());
@@ -43,23 +47,18 @@ public class ParentManagementSystem {
         }
     }
 
-    /** Returns the matching comma-separated student record, or null if not found. */
-    private String[] findStudent(int studentId) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(studentFile))) {
+    private String[] findStudent(String studentId) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(STUDENT_FILE))) {
             String line;
-
             while ((line = reader.readLine()) != null) {
                 String[] fields = line.split(",", -1);
-
-                // Field 0 is the ID. Field 5 is the parent's phone number.
-                if (fields.length >= 6 && fields[0].trim().equals(String.valueOf(studentId))) {
+                if (fields.length >= 5 && fields[0].trim().equals(studentId)) {
                     return fields;
                 }
             }
         } catch (IOException e) {
-            System.out.println("Could not read student.txt: " + e.getMessage());
+            System.out.println("Could not read student details: " + e.getMessage());
         }
-
         return null;
     }
 }
