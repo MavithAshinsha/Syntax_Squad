@@ -18,6 +18,7 @@ public class EclassMain {
 
             System.out.println("1. Student Registration");
             System.out.println("2. Student Login");
+            System.out.println("3. Admin Login");
             System.out.println("0. Exit");
 
             System.out.print("Enter your choice: ");
@@ -78,6 +79,10 @@ public class EclassMain {
                         choice = 0;
                         System.out.println("\nThank you for using E-Class!\n");
                     }
+                    break;
+                case 3:
+                    Scanner scanner = new Scanner(System.in);
+                    new adminLogin(scanner).loginAndOpen();
                     break;
                 case 0:
                     System.out.println("\nThank you for using E-Class!\n");

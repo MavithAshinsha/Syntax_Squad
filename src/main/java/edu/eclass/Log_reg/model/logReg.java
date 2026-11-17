@@ -25,6 +25,7 @@ public class logReg {
     //setter
     public logReg() {
         this(new Scanner(System.in));
+
     }
 
     public logReg(Scanner scanner) {
