@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import java.util.Scanner;
 
 public class Course {
@@ -11,6 +12,9 @@ public class Course {
     // File handling: Store course details and student registrations
     private static final String COURSES_FILE = "Courses.txt";
     private static final String COURSE_REGISTRATION_FILE = "CourseRegistration.txt";
+
+
+    
 
     // Encapsulation: Protected instance variables
     protected String courseId;
