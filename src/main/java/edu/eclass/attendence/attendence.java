@@ -55,7 +55,6 @@ public class attendence {
         } catch (IOException e) {
             System.out.println("Could not save attendance: " + e.getMessage());
             return false;
-            
         }
 
         ParentManagementSystem pms = new ParentManagementSystem();
