@@ -1,0 +1,10 @@
+CourseID,CourseName,CourseFee
+C001,Sinhala Language,1000
+C002,English Language,1100
+C003,Mathematics,1200
+C004,Science,1300
+C005,History,1400
+C006,Tamil Language,1500
+C007,ICT,1200
+C008,Commerce,1300
+C009,Geography,1400
