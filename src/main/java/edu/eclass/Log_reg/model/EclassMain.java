@@ -1,102 +1,92 @@
 package main.java.edu.eclass.Log_reg.model;
 import java.util.Scanner;
 
-
-public class EclassMain {
-    
+public class EclassMain{
     public static void main(String[] args) {
-        
-        Scanner sc = new Scanner(System.in);
-        logReg l=new logReg(sc);
+        Scanner scanner = new Scanner(System.in);
+        logReg account = new logReg(scanner);
         int choice;
-        
-        
-        do{
-            System.out.println("\n==============================");
-            System.out.println("       E-CLASS SYSTEM");
-            System.out.println("==============================");
 
-            System.out.println("1. Student Registration");
-            System.out.println("2. Student Login");
+        do {
+            System.out.println("\n==============================");
+            System.out.println("       E-CLASS PORTAL");
+            System.out.println("==============================");
+            System.out.println("1. Register");
+            System.out.println("2. Login");
             System.out.println("3. Admin Login");
             System.out.println("0. Exit");
+            choice = readChoice(scanner, "Enter your choice: ");
 
-            System.out.print("Enter your choice: ");
-
-            choice = sc.nextInt();
-            
-            sc.nextLine();
-
-            switch(choice) {
-
+            switch (choice) {
                 case 1:
-                    l.reg();
+                    account.reg();
                     break;
-
                 case 2:
-                    if (l.login() == 1) {
-                        int dashboardChoice;
-                        do {
-                            System.out.println("\n==============================");
-                            System.out.println("       STUDENT DASHBOARD");
-                            System.out.println("==============================");
-
-                            System.out.println("01. View Profile");
-                            System.out.println("02. View Courses");
-                            System.out.println("03. Make Payment");
-                            System.out.println("04. View Attendance");
-                            System.out.println("05. Update Profile");
-                            System.out.println("06. Logout");
-
-                            System.out.print("\nEnter your choice: ");
-                            dashboardChoice = sc.nextInt();
-                            sc.nextLine();
-
-                            switch (dashboardChoice) {
-                                case 1:
-                                    System.out.println("\nView Profile Dashboard is opening...");
-                                    break;
-                                case 2:
-                                    System.out.println("\nCourse Dashboard is opening...");
-                                    break;
-                                case 3:
-                                    System.out.println("\nPayment Dashboard is opening...");
-                                    break;
-                                case 4:
-                                    System.out.println("\nAttendance Dashboard is opening...");
-                                    break;
-                                case 5:
-                                    System.out.println("\nUpdate Profile Dashboard is opening...");
-                                    break;
-                                case 6:
-                                    System.out.println("\nLogging out...");
-                                    break;
-                                default:
-                                    System.out.println("\nInvalid dashboard choice!");
-                            }
-                        } while (dashboardChoice != 6);
-
-                        choice = 0;
-                        System.out.println("\nThank you for using E-Class!\n");
+                    String studentId = account.login();
+                    if (studentId != null) {
+                        openDashboard(scanner, studentId);
                     }
                     break;
                 case 3:
-                    Scanner scanner = new Scanner(System.in);
                     new adminLogin(scanner).loginAndOpen();
                     break;
                 case 0:
-                    System.out.println("\nThank you for using E-Class!\n");
+                    System.out.println("Thank you for using E-Class!");
                     break;
-
                 default:
-                    System.out.println("\nInvalid choice!\n");
+                    System.out.println("Invalid choice!");
             }
-
-        } while(choice != 0);
-
-        sc.close();
+        } while (choice != 0);
     }
-        
-        
-       
+
+    private static void openDashboard(Scanner scanner, String studentId) {
+        int choice;
+        do {
+            System.out.println("\n==============================");
+            System.out.println("       STUDENT DASHBOARD");
+            System.out.println("==============================");
+            System.out.println("01. View Profile");
+            System.out.println("02. View Courses");
+            System.out.println("03. Make Payment");
+            System.out.println("04. View Attendance");
+            System.out.println("05. Update Profile");
+            System.out.println("06. Logout");
+
+            choice = readChoice(scanner, "\nEnter your choice: ");
+            switch (choice) {
+                case 1:
+                    new updateProfile().viewProfile(studentId);
+                    break;
+                case 2:
+                    new Course().manageCourses(scanner, studentId);
+                    break;
+                case 3:
+                    new Payment().makePayment(studentId, scanner);
+                    break;
+                case 4:
+                    new attendence().markAtt(studentId, scanner);
+                    break;
+                case 5:
+                    new updateProfile().updateProfile(studentId, scanner);
+                    break;
+                case 6:
+                    System.out.println("\nLogging out...");
+                    break;
+                default:
+                    System.out.println("\nInvalid dashboard choice!");
+            }
+        } while (choice != 6);
     }
+
+    private static int readChoice(Scanner scanner, String prompt) {
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.nextLine().trim();
+            try {
+                return Integer.parseInt(input);
+            } catch (NumberFormatException e) {
+                System.out.println("Please enter a valid number.");
+            }
+        }
+    }
+}

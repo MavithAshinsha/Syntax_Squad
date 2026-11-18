@@ -2,17 +2,18 @@ package main.java.edu.eclass.Log_reg.model;
 
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
 public class logReg {
+    private static final String STUDENT_FILE = "student.txt";
 
     private final Scanner scanner;
-
     private String stid;
-    String pw;
+    private String pw;
     private String initialsName;
     private String fullName;
     private String birthDate;
@@ -20,33 +21,17 @@ public class logReg {
     private String pTel;
     private String parentName;
     private String parentTel;
-    private int nextStudentNumber = getLastId();
+    private int nextStudentNumber;
 
-    //setter
     public logReg() {
         this(new Scanner(System.in));
-
     }
 
     public logReg(Scanner scanner) {
         this.scanner = scanner;
+        this.nextStudentNumber = getLastId();
     }
 
-    public logReg(String stid, String pw, String name, String email, String pTel) {
-        this();
-        this.stid = stid;
-        this.pw = pw;
-        this.initialsName = name;
-        this.email = email;
-        this.pTel = pTel;
-
-    }
-
-    public logReg(int stid, String pw, String name, String email, String pTel) {
-        this(String.valueOf(stid), pw, name, email, pTel);
-    }
-
-    //getter
     public String getStid() {
         return stid;
     }
@@ -118,121 +103,118 @@ public class logReg {
     public void setParentTel(String parentTel) {
         this.parentTel = parentTel;
     }
-    
+
     public void reg() {
-        System.out.print("\n\nEnter Your Name with Initials: ");
-        setInitialsName(scanner.nextLine());
+        System.out.print("\nEnter Your Name with Initials: ");
+        setInitialsName(scanner.nextLine().trim());
         System.out.print("Enter Your Full Name: ");
-        setFullName(scanner.nextLine());
+        setFullName(scanner.nextLine().trim());
         System.out.print("Enter Your Birth Date (YYYY-MM-DD): ");
-        setBirthDate(scanner.nextLine());
+        setBirthDate(scanner.nextLine().trim());
         System.out.print("Enter the Password: ");
-        String pw = scanner.nextLine();
+        pw = scanner.nextLine();
         System.out.print("Enter Your Email: ");
-        setEmail(scanner.nextLine());
+        setEmail(scanner.nextLine().trim());
         System.out.print("Enter Your Number: ");
-        setPtel(scanner.nextLine());
-
+        setPtel(scanner.nextLine().trim());
         System.out.print("Enter Your Parent Name: ");
-        setParentName(scanner.nextLine());
+        setParentName(scanner.nextLine().trim());
         System.out.print("Enter Your Parent Number: ");
-        setParentTel(scanner.nextLine());
+        setParentTel(scanner.nextLine().trim());
 
-
-
-        System.out.print("\n");
-        
-        setStid(String.format("ST%03d", nextStudentNumber++));
-        saveData(getStid(), getInitialsName(), pw, getEmail(), getPtel(), getFullName(), getBirthDate(),
-                getParentName(), getParentTel());
-        System.out.println("\nRegistration Succesful!");
-        System.out.println("Your Student ID: "+getStid());
+        setStid(String.format("ST%03d", nextStudentNumber));
+        if (saveData(getStid(), getInitialsName(), pw, getEmail(), getPtel(),
+                getFullName(), getBirthDate(), getParentName(), getParentTel())) {
+            nextStudentNumber++;
+            System.out.println("\nRegistration successful!");
+            System.out.println("Your Student ID: " + getStid());
+        }
     }
-    
-    public int login() {
-        System.out.print("\n\nEnter your Student ID: ");
-        String sId = scanner.nextLine().trim();
+
+    public String login() {
+        System.out.print("\nEnter your Student ID: ");
+        String studentId = scanner.nextLine().trim();
         System.out.print("Enter your Password: ");
-        String pw = scanner.nextLine();
-        if (checkID(sId,pw)) {
-            System.out.println("\nLogin Succesful!");
-            return 1;
-        }else{
-            System.out.println("\nLogin Faild!");
-            return 0;
+        String password = scanner.nextLine();
+
+        if (checkID(studentId, password)) {
+            System.out.println("\nLogin successful!");
+            return studentId;
         }
+
+        System.out.println("\nLogin failed!");
+        return null;
     }
 
-    public void saveData(String sid, String na, String pw, String email, String ptel) {
-        try (FileWriter writer = new FileWriter("student.txt", true)) {
-            writer.write(sid + "," + na + "," + pw + "," + email + "," + ptel + "\n");
+    public boolean saveData(String sid, String initialsName, String password, String email,
+            String pTel, String fullName, String birthDate, String parentName, String parentTel) {
+        try (FileWriter writer = new FileWriter(STUDENT_FILE, true)) {
+            writer.write(sid + "," + initialsName + "," + password + "," + email + ","
+                    + pTel + "," + fullName + "," + birthDate + "," + parentName + ","
+                    + parentTel + System.lineSeparator());
+            return true;
         } catch (IOException e) {
-            System.out.println("invalid: " + e.getMessage());
+            System.out.println("Could not save student details: " + e.getMessage());
+            return false;
         }
     }
 
-    public void saveData(String sid, String initialsName, String pw, String email, String ptel,
-                         String fullName, String birthDate, String parentName, String parentTel) {
-        try (FileWriter writer = new FileWriter("student.txt", true)) {
-            writer.write(sid + "," + initialsName + "," + pw + "," + email + "," + ptel + ","
-                    + fullName + "," + birthDate + "," + parentName + "," + parentTel + "\n");
-        } catch (IOException e) {
-            System.out.println("invalid: " + e.getMessage());
-        }
+    public boolean saveData(String sid, String name, String password, String email,
+            String phone, String parentPhone) {
+        return saveData(sid, name, password, email, phone, "", "", "", parentPhone);
     }
 
-    public void saveData(int sid, String na, String pw, String email, String ptel) {
-        saveData(String.valueOf(sid), na, pw, email, ptel);
+    public boolean saveData(String sid, String name, String password, String email, String phone) {
+        return saveData(sid, name, password, email, phone, phone);
     }
-    
-    public static boolean checkID(String id,String pw){
-        try(BufferedReader r=new BufferedReader(new FileReader("student.txt"))){
+
+    public static boolean checkID(String id, String password) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(STUDENT_FILE))) {
             String line;
-            while((line=r.readLine())!=null){
-                String[] fields=line.split(",",-1);
-                if(fields.length >= 3
-                        && fields[0].equals(id)
-                        && fields[2].equals(pw)){
+            while ((line = reader.readLine()) != null) {
+                String[] fields = line.split(",", -1);
+                if (fields.length >= 3
+                        && fields[0].trim().equals(id)
+                        && fields[2].equals(password)) {
                     return true;
-                }            
+                }
             }
-
-            return false;
+        } catch (IOException e) {
+            System.out.println("Could not read student details: " + e.getMessage());
         }
-        catch (IOException e) {
-            System.out.println("invalid: " + e.getMessage());
-            return false;
-        }
+        return false;
     }
 
-    public static boolean checkID(int id, String pw) {
-        return checkID(String.valueOf(id), pw);
+    public static boolean checkID(int id, String password) {
+        return checkID(String.valueOf(id), password);
     }
 
     public int getLastId() {
-
-    int lastId = 0;
-
-    try (BufferedReader br = new BufferedReader(new FileReader("student.txt"))) {
-        String line;
-
-        while ((line = br.readLine()) != null) {
-            String[] data = line.split(",", -1);
-            String studentId = data[0].trim();
-            String number = studentId.matches("(?i)ST\\d+")
-                    ? studentId.substring(2)
-                    : studentId;
-            if (number.matches("\\d+")) {
-                lastId = Math.max(lastId, Integer.parseInt(number));
-            }
+        int lastId = 0;
+        File studentFile = new File(STUDENT_FILE);
+        if (!studentFile.exists()) {
+            return 1;
         }
-    } catch (IOException e) {
-        System.out.println(e.getMessage());
-    } catch (NumberFormatException e) {
-        System.out.println("Invalid student ID in student.txt: " + e.getMessage());
-    }
 
-    return lastId+1;
-}
-    
+        try (BufferedReader reader = new BufferedReader(new FileReader(studentFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] fields = line.split(",", -1);
+                if (fields.length == 0) {
+                    continue;
+                }
+                String studentId = fields[0].trim();
+                String number = studentId.matches("(?i)ST\\d+")
+                        ? studentId.substring(2)
+                        : studentId;
+                if (number.matches("\\d+")) {
+                    lastId = Math.max(lastId, Integer.parseInt(number));
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Could not read student details: " + e.getMessage());
+        }
+
+        return lastId + 1;
+    }
 }
