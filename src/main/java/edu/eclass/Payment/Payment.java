@@ -1,3 +1,6 @@
+package edu.eclass.Payment;
+
+import edu.eclass.course.Course;
 import java.util.Scanner;
 import java.io.*;
 
@@ -170,6 +173,14 @@ public class Payment extends Course {
 
                 System.out.print("Enter CVV: ");
                 String cvv = input.nextLine();
+
+                if (cardHolder.trim().isEmpty()
+                        || !cardNumber.matches("\\d{12,19}")
+                        || !expiryDate.matches("\\d{2}/\\d{2}")
+                        || !cvv.matches("\\d{3,4}")) {
+                    System.out.println("Invalid card details.");
+                    return;
+                }
 
                 if (updatePayment(studentId, courseId, "Successful")) {
                     System.out.println("Payment Successful for " + courseName + ".");

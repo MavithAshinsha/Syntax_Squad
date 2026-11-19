@@ -1,5 +1,7 @@
-package main.java.edu.eclass.Log_reg.model;
+package edu.eclass.Log_reg;
 
+import edu.eclass.PMS.ParentManagementSystem;
+import edu.eclass.Payment.Payment;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;

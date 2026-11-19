@@ -1,4 +1,4 @@
-package main.java.edu.eclass.updateProfile;
+package edu.eclass.updateProfile;
 
 // Importing classes for file handling
 import java.io.BufferedReader;
@@ -52,7 +52,7 @@ public class updateProfile {
 
     // Method to update student profile details
     // Uses Scanner to get user input
-    public void updateProfile(String studentId, Scanner scanner) {
+    public void updateProfileInfo(String studentId, Scanner scanner) {
 
         try {
             // Finding the student record using student ID

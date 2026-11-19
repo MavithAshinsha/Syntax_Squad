@@ -1,4 +1,6 @@
+package edu.eclass.course;
 
+import edu.eclass.Payment.Payment;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;

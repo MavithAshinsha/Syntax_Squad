@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Run E-Class Portal (GUI)",
+            "request": "launch",
+            "mainClass": "edu.eclass.Log_reg.EclassMain",
+            "cwd": "${workspaceFolder}"
+        },
+        {
+            "type": "java",
+            "name": "Run E-Class Portal (Console)",
+            "request": "launch",
+            "mainClass": "edu.eclass.Log_reg.EclassConsoleMain",
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

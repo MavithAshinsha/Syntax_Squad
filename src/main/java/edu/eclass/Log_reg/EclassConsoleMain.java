@@ -1,7 +1,12 @@
-package main.java.edu.eclass.Log_reg.model;
+package edu.eclass.Log_reg;
+
+import edu.eclass.Payment.Payment;
+import edu.eclass.attendence.attendence;
+import edu.eclass.course.Course;
+import edu.eclass.updateProfile.updateProfile;
 import java.util.Scanner;
 
-public class EclassMain{
+public class EclassConsoleMain{
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         logReg account = new logReg(scanner);
@@ -67,7 +72,7 @@ public class EclassMain{
                     new attendence().markAtt(studentId, scanner);
                     break;
                 case 5:
-                    new updateProfile().updateProfile(studentId, scanner);
+                    new updateProfile().updateProfileInfo(studentId, scanner);
                     break;
                 case 6:
                     System.out.println("\nLogging out...");

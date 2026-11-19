@@ -1,3 +1,7 @@
+package edu.eclass.attendence;
+
+import edu.eclass.PMS.ParentManagementSystem;
+import edu.eclass.Payment.Payment;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;

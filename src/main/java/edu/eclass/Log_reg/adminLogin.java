@@ -1,4 +1,4 @@
-package main.java.edu.eclass.Log_reg.model;
+package edu.eclass.Log_reg;
 
 
 import java.io.BufferedReader;
